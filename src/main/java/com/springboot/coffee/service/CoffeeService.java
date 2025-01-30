@@ -2,6 +2,7 @@ package com.springboot.coffee.service;
 
 import com.springboot.coffee.entity.Coffee;
 import org.springframework.stereotype.Service;
+import java.util.List;
 
 @Service // 서비스 계층, spring의 관리 대상 빈!
 
@@ -17,11 +18,18 @@ public class CoffeeService {
         return coffee;
     }
 
-    public Coffee findCoffee() {
+    public Coffee findCoffee(long coffeeId) {
+        Coffee coffee = new Coffee(coffeeId,"아메리카노","Americao",2500);
         return coffee;
     }
-    public Coffee findCoffees() {
-        return coffee;
+
+    public List<Coffee> findCoffees() {
+        List<Coffee> coffees = List.of(
+                new Coffee(1L,"아메리카노","Americao",2500),
+                new Coffee(2L, "캐러멜 라뗴", "Caramel Latte", 5000)
+
+        );
+        return coffees;
     }
 
     public Coffee updateCoffee(Coffee coffee) {

@@ -11,7 +11,6 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 
-
 public class Coffee {
     private long coffeeId;
     private String korName;

@@ -2,13 +2,17 @@ package com.springboot.coffee.controller;
 
 import com.springboot.coffee.dto.CoffeePatchDto;
 import com.springboot.coffee.dto.CoffeePostDto;
+import com.springboot.coffee.dto.CoffeeResponseDto;
 import com.springboot.coffee.entity.Coffee;
 import com.springboot.coffee.mapper.CoffeeMapper;
 import com.springboot.coffee.service.CoffeeService;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController //Spring MVC에서 Restful 웹 서비스를 처리하기 위한 컨트롤러 입니다.
 @RequestMapping("/v44/coffees") // /v44/coffees url 경로로 들어오는 요청을 처리하도록 매핑합니다.
@@ -36,33 +40,57 @@ public class CoffeeController {
     }
 
     //post 요청
-    public ResponseEntity postCoffee(CoffeePostDto coffeePostDto) {
+    @PostMapping
+    public ResponseEntity postCoffee(@RequestBody  CoffeePostDto coffeePostDto) {
+        //coffeepostdto 를 coffee엔티티로 변환
+        Coffee coffee = coffeeService.createCoffee(coffeeMapper.coffeePostDtoTocoffee(coffeePostDto));
+
+        CoffeeResponseDto responseDto = coffeeMapper.coffeeToCoffeeResponseDto(coffee);
+        return new ResponseEntity<>(responseDto,HttpStatus.CREATED);
 
     }
 
     //get 요청(특정 id 조회)
-    public ResponseEntity getCoffee() {
-        // URL 경로의 "coffee-id" 값을 받아서 coffeeId 변수에 저장합니다
+    @GetMapping("/{coffee-id}")
+    public ResponseEntity getCoffee(@PathVariable("coffee-id") long coffeeId) {
+        // URL 경로의 "coffee-id" 값을 받아서 coffeeId 변수에 저장합니다.
+        Coffee coffee = coffeeService.findCoffee(coffeeId); //service 로 entity 형태로 전달
+        CoffeeResponseDto responseDto = coffeeMapper.coffeeToCoffeeResponseDto(coffee); //클라이언트에게 dto 형태로 전달
+        return new ResponseEntity<>(responseDto, HttpStatus.OK);
 
     }
 
     //get 요청(전체 조회)
+    @GetMapping
     public ResponseEntity getCoffees() {
+
+        List<Coffee> coffees = coffeeService.findCoffees();
+        List<CoffeeResponseDto> responseDtos = coffees.stream()
+                .map(coffee -> coffeeMapper.coffeeToCoffeeResponseDto(coffee))
+                .collect(Collectors.toList());
+        return new ResponseEntity(responseDtos, HttpStatus.OK);
 
     }
 
     //patch 요청
-    public ResponseEntity patchCoffee(long coffeeId,CoffeePatchDto coffeePatchDto) {
-
+    @PatchMapping("/{coffee-id}")
+    public ResponseEntity patchCoffee(@PathVariable("coffee-id") long coffeeId, @RequestBody CoffeePatchDto coffeePatchDto) {
+        coffeePatchDto.setCoffeeId(coffeeId);
+        Coffee coffee = coffeeService.updateCoffee(coffeeMapper.coffeePatchDtoToCoffee(coffeePatchDto)); //service로 전달
+        CoffeeResponseDto response = coffeeMapper.coffeeToCoffeeResponseDto(coffee); //dto 를 클라이언트에게 전달
+        return new ResponseEntity<>(response,HttpStatus.OK);
     }
 
 
     //delete 요청
+    @DeleteMapping("/{coffee-id}")
     public ResponseEntity deleteCoffee(@PathVariable("coffee-id") long coffeeId) {
         // URL 경로의 "coffee-id" 값을 받아서 coffeeId 변수에 저장합니다.
 
-    }
+        coffeeService.deleteCoffee(coffeeId);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 
+    }
 
 
 }
