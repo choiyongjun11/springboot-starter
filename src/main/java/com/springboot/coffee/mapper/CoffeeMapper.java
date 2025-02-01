@@ -6,6 +6,8 @@ import com.springboot.coffee.dto.CoffeeResponseDto;
 import com.springboot.coffee.entity.Coffee;
 import org.mapstruct.Mapper;
 
+import java.util.List;
+
 @Mapper(componentModel = "spring") // mapStruct의 mapper 지정하여 spring을 componentmodel 로 설정
 //스프링 빈으로 등록 되도록 합니다.
 public interface CoffeeMapper { //dto 와 entity 간의 변환을 담당하는 mapper 인터페이스
@@ -18,5 +20,7 @@ public interface CoffeeMapper { //dto 와 entity 간의 변환을 담당하는 m
     Coffee coffeePostDtoTocoffee(CoffeePostDto coffeePostDto);
 
     CoffeeResponseDto coffeeToCoffeeResponseDto(Coffee coffee);
+
+    List<CoffeeResponseDto> coffeesToCoffeeResponseDtos(List<Coffee> coffees);
 
 }
