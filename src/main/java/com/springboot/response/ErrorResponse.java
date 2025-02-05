@@ -18,6 +18,8 @@ public class ErrorResponse {
     private List<FieldError> fieldErrors;
     private List<ConstraintViolationError> violationErrors;
 
+    //int형, List 형 타입이 달라서 하나의 메서드에 값이 들어오지 못한다.
+    //따라서, List 형 메서드 1개, int 형 메서드 1개, 합쳐진 메서드 1개 구성했다.
     private ErrorResponse(final List<FieldError> fieldErrors,
                           final List<ConstraintViolationError> violationErrors) {
         this.fieldErrors = fieldErrors;

@@ -8,6 +8,7 @@ import com.springboot.order.mapper.OrderMapper;
 import com.springboot.order.service.OrderService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -15,6 +16,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/v5/orders") //서비스 계층과 api 게층 연동
+@Validated
 public class OrderController {
     private final OrderService orderService;
     private final OrderMapper mapper;
@@ -24,7 +26,7 @@ public class OrderController {
         this.mapper = mapper;
     }
 
-    //  ResponseEntity -> post, patch, get, del url 메서드
+    //  ResponseEntity -> post, patch, get, del - url 메서드
 
     @PostMapping
     public ResponseEntity postOrder(@RequestBody OrderPostDto orderPostDto) {
@@ -49,6 +51,12 @@ public class OrderController {
 
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
+
+
+    //patch 대기
+//    public ResponseEntity patchOrder() {
+//
+//    }
 
     @DeleteMapping("/{order-id}")
     public ResponseEntity cancelOrder(@PathVariable("order-id") long orderId) {

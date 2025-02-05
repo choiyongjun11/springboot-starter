@@ -2,10 +2,10 @@ package com.springboot.coffee.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
-@AllArgsConstructor
 
 public class CoffeeResponseDto {
     private long coffeeId;

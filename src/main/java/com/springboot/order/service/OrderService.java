@@ -7,6 +7,7 @@ import java.util.List;
 
 @Service
 public class OrderService {
+    // create, find, update, delete
 
     public Order createOrder(Order order) {
         return order;
@@ -23,7 +24,7 @@ public class OrderService {
 
     }
 
-    //update
+    //update 대기
 
     public void cancelOrder() {
 

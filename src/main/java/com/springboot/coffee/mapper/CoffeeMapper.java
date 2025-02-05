@@ -15,6 +15,9 @@ public interface CoffeeMapper { //dto 와 entity 간의 변환을 담당하는 m
     //클라이언트 -> patch, post (dto) -> 서버로 요청 시 patch, post(entity) 변환이 필요합니다.
     // 서버 응답 -> entity를 가지고 클라이언트에게 dto로 보내줘야 하므로 변환이 필요합니다.
 
+    //@Mapping(source = "price", target = "price.value") 무슨 기능이지?
+    //DTO와 엔티티 간의 필드 매핑을 맞춰주는 역할을 합니다. dto의 price -> entity price.value 로 매핑
+
     Coffee coffeePatchDtoToCoffee(CoffeePatchDto coffeePatchDto);
 
     Coffee coffeePostDtoTocoffee(CoffeePostDto coffeePostDto);

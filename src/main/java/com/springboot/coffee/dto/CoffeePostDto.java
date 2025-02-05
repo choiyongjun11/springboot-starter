@@ -14,6 +14,7 @@ public class CoffeePostDto {
     @NotBlank // korName 필드가 null, 빈 문자열, 공백 문자열이 아닌지 검증합니다.
     private String korName; // 커피 이름(한글)을 저장하는 필드입니다.
 
+    @NotBlank
     @Pattern( // engName 필드가 지정된 정규식 패턴을 따르는지 검증합니다.
             regexp = "^([A-Za-z])(\\s?[A-Za-z])*$", // 영어 단어와 단어 사이의 공백 한 칸을 허용하는 패턴입니다.
             message = "커피명(영문)은 영문이어야 합니다(단어 사이 공백 한 칸 포함). 예) Cafe Latte"

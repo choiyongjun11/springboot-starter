@@ -1,6 +1,7 @@
 package com.springboot.coffee.service;
 
 import com.springboot.coffee.entity.Coffee;
+import com.springboot.member.entity.Member;
 import org.springframework.stereotype.Service;
 import java.util.List;
 
@@ -19,6 +20,9 @@ public class CoffeeService {
     }
 
     public Coffee updateCoffee(Coffee coffee) {
+        // Coffee updatedCoffee = coffee;
+       // return updatedCoffee;
+
         return coffee;
     }
 

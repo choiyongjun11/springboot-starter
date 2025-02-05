@@ -1,12 +1,15 @@
 package com.springboot.member.dto;
 
 import lombok.Getter;
+import lombok.Setter;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 
+//valid 검증을 위해 @NotSpace, @Pattern 을 추가했습니다.
 @Getter
+@Setter
 public class MemberPostDto {
     //email, name, phone
     @NotBlank

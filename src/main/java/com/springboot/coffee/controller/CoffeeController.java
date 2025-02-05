@@ -45,48 +45,116 @@ public class CoffeeController {
     //post 요청
     @PostMapping
     public ResponseEntity postCoffee(@Valid @RequestBody CoffeePostDto coffeePostDto) {
-        //coffeepostdto 를 coffee엔티티로 변환
 
+        /*
+        1) no mapper interface 구성
         Coffee coffee = coffeeService.createCoffee(coffeeMapper.coffeePostDtoTocoffee(coffeePostDto));
+
         CoffeeResponseDto responseDto = coffeeMapper.coffeeToCoffeeResponseDto(coffee);
 
         return new ResponseEntity<>(responseDto,HttpStatus.CREATED);
+
+        2) mapper 구성
+
+        Coffee coffee = coffeeService.createCoffee(coffeeMapper.coffeePostDtoToCoffee(coffeePostDto));
+        return new ResponseEntity<>(coffeeMapper.coffeeToCoffeeResponseDto(coffee), HttpStatus.CREATED);
+        }
+
+        */
+
+        //3) 코드 간편화
+        Coffee coffee = coffeeMapper.coffeePostDtoTocoffee(coffeePostDto);
+
+        Coffee response = coffeeService.createCoffee(coffee);
+
+        return new ResponseEntity<>(coffeeMapper.coffeeToCoffeeResponseDto(response), HttpStatus.CREATED);
+
 
     }
 
     //get 요청(특정 id 조회)
     @GetMapping("/{coffee-id}")
-    public ResponseEntity getCoffee(@PathVariable("coffee-id") long coffeeId) {
+    public ResponseEntity getCoffee(@PathVariable("coffee-id") @Positive long coffeeId) {
+
+
         // URL 경로의 "coffee-id" 값을 받아서 coffeeId 변수에 저장합니다.
+
+       /*
+        1) no mapper interface 구성
         Coffee coffee = coffeeService.findCoffee(coffeeId); //service 로 entity 형태로 전달
         CoffeeResponseDto responseDto = coffeeMapper.coffeeToCoffeeResponseDto(coffee); //클라이언트에게 dto 형태로 전달
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
+
+        */
+
+        // 2) 코드 간편화
+        Coffee coffee = coffeeService.findCoffee(coffeeId);
+        return new ResponseEntity<>(coffeeMapper.coffeeToCoffeeResponseDto(coffee), HttpStatus.OK);
+
+
     }
 
     //get 요청(전체 조회)
     @GetMapping
     public ResponseEntity getCoffees() {
+    /*
+
+        //1) no mapper interface 구성
+
         List<Coffee> coffees = coffeeService.findCoffees();
-        List<CoffeeResponseDto> responseDtos = coffees.stream()
+        List<CoffeeResponseDto> response = coffees.stream()
                 .map(coffee -> coffeeMapper.coffeeToCoffeeResponseDto(coffee))
                 .collect(Collectors.toList());
-        return new ResponseEntity(responseDtos, HttpStatus.OK);
 
-    }
+        .stream() → coffees 리스트를 Stream 형태로 변환
+                .map(coffee -> coffeeMapper.coffeeToCoffeeResponseDto(coffee))
+        coffee 객체 하나씩 꺼내서 coffeeMapper.coffeeToCoffeeResponseDto(coffee)를 호출
+        즉, Coffee → CoffeeResponseDto 변환
+        .collect(Collectors.toList()) → 변환된 CoffeeResponseDto 객체들을 리스트로 모음
+        return new ResponseEntity<>(response,HttpStatus.OK);
+
+         //2) mapper 구성
+        //List<Coffee> coffees = coffeeService.findCoffees();
+        //List<CoffeeResponseDto> response = coffees.stream()
+          //      .map(coffeeMapper::coffeeToCoffeeResponseDto)//개별 객체 변환
+            //    .collect(Collectors.toList());
+
+        */
+
+        //3 코드 간편화
+            List<Coffee> coffees = coffeeService.findCoffees();
+            List<CoffeeResponseDto> response = coffeeMapper.coffeesToCoffeeResponseDtos(coffees);
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        }
+
 
     //patch 요청, @positive 애너테이션으로 양수 값인지 유효성 검증을 합니다.
     @PatchMapping("/{coffee-id}")
     public ResponseEntity patchCoffee(@PathVariable("coffee-id") @Positive long coffeeId, @Valid @RequestBody CoffeePatchDto coffeePatchDto) {
+
+        /*
+        1)  no mapper interface 구성
         coffeePatchDto.setCoffeeId(coffeeId);
         Coffee coffee = coffeeService.updateCoffee(coffeeMapper.coffeePatchDtoToCoffee(coffeePatchDto)); //service로 전달
         CoffeeResponseDto response = coffeeMapper.coffeeToCoffeeResponseDto(coffee); //dto 를 클라이언트에게 전달
         return new ResponseEntity<>(response,HttpStatus.OK);
+
+        2) mapper interface 구성
+        Coffee coffee = coffeeService.createCoffee(coffeeMapper.coffeePostDtoToCoffee(coffeePostDto));
+        return new ResponseEntity<>(coffeeMapper.coffeeToCoffeeResponseDto(coffee), HttpStatus.CREATED);
+
+          */
+
+        //3) 코드 간편화
+        coffeePatchDto.setCoffeeId(coffeeId);
+        Coffee coffee = coffeeService.updateCoffee(coffeeMapper.coffeePatchDtoToCoffee(coffeePatchDto));
+        return new ResponseEntity<>(coffeeMapper.coffeeToCoffeeResponseDto(coffee), HttpStatus.OK);
     }
 
 
     //delete 요청
     @DeleteMapping("/{coffee-id}")
-    public ResponseEntity deleteCoffee(@PathVariable("coffee-id") long coffeeId) {
+    public ResponseEntity deleteCoffee(@PathVariable("coffee-id") @Positive long coffeeId) {
         // URL 경로의 "coffee-id" 값을 받아서 coffeeId 변수에 저장합니다.
         coffeeService.deleteCoffee(coffeeId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
